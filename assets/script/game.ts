@@ -1,8 +1,9 @@
+import item from "./item";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class game extends cc.Component {
 
     private BG_SIZE: number = 650;
 
@@ -14,6 +15,9 @@ export default class NewClass extends cc.Component {
 
     @property(cc.Node)
     bgPinTu: cc.Node = null;
+
+    @property(cc.Prefab)
+    pre_itemBg: cc.Prefab = null;
 
     @property(cc.Prefab)
     pre_item: cc.Prefab = null;
@@ -42,8 +46,35 @@ export default class NewClass extends cc.Component {
         this.bgPinTu.width = this.bgPinTuWH;
         this.bgPinTu.height = this.bgPinTuWH;
 
-        var pos = cc.v2(-this.bgPinTuWH / 2, -this.bgPinTuWH / 2);
+        this.addItemBg();
+        this.addAllItem();
+    }
 
+    addItemBg() {
+        var pos = cc.v2(-this.bgPinTuWH / 2, -this.bgPinTuWH / 2);
+        for (let i = 0; i < this.itemNum; i++) {
+            for (let j = 0; j < this.itemNum; j++) {
+                let node = cc.instantiate(this.pre_itemBg);
+                this.bgPinTu.addChild(node);
+
+                node.width = this.itemWH;
+                node.height = this.itemWH;
+
+                // 设置位置
+
+                var posX = pos.x + this.itemWH / 2 + this.jiange + i * (this.itemWH + this.jiange);
+                var posY = pos.y + this.itemWH / 2 + this.jiange + j * (this.itemWH + this.jiange);
+                var posEnd = cc.v2(posX, posY);
+
+                // node.getChildByName("num").getComponent(cc.Label).string = "" + ((i + 1) + j * 4);
+
+                node.setPosition(posEnd);
+            }
+        }
+    }
+
+    addAllItem() {
+        var pos = cc.v2(-this.bgPinTuWH / 2, -this.bgPinTuWH / 2);
         for (let i = 0; i < this.itemNum; i++) {
             for (let j = 0; j < this.itemNum; j++) {
                 let node = cc.instantiate(this.pre_item);
@@ -58,8 +89,10 @@ export default class NewClass extends cc.Component {
                 var posY = pos.y + this.itemWH / 2 + this.jiange + j * (this.itemWH + this.jiange);
                 var posEnd = cc.v2(posX, posY);
 
-                node.getChildByName("num").getComponent(cc.Label).string = "" + ((i + 1) + j * 4);
-
+                var js = node.getComponent(item);
+                if (js) {
+                    js.init(i + j * this.itemNum, 70 - 5 * (this.itemNum - 3));
+                }
                 node.setPosition(posEnd);
             }
         }
