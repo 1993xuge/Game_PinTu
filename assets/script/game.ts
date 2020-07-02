@@ -23,7 +23,7 @@ export default class NewClass extends cc.Component {
     // 每个item的宽高
     itemWH: number = 1;
     // 两个块 之间的间隔
-    jiange: number = 3;
+    jiange: number = 5;
     // 拼图背景的宽高
     bgPinTuWH: number = 1;
 
@@ -54,7 +54,12 @@ export default class NewClass extends cc.Component {
 
                 // 设置位置
 
-                var posEnd = cc.v2(pos.x + this.itemWH / 2, pos.y + this.itemWH / 2);
+                var posX = pos.x + this.itemWH / 2 + this.jiange + i * (this.itemWH + this.jiange);
+                var posY = pos.y + this.itemWH / 2 + this.jiange + j * (this.itemWH + this.jiange);
+                var posEnd = cc.v2(posX, posY);
+
+                node.getChildByName("num").getComponent(cc.Label).string = "" + ((i + 1) + j * 4);
+
                 node.setPosition(posEnd);
             }
         }
