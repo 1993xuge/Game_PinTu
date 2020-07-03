@@ -74,7 +74,7 @@ export default class game extends cc.Component {
     }
 
     addAllItem() {
-        var pos = cc.v2(-this.bgPinTuWH / 2, -this.bgPinTuWH / 2);
+        var pos = cc.v2(-this.bgPinTuWH / 2, this.bgPinTuWH / 2);
         for (let i = 0; i < this.itemNum; i++) {
             for (let j = 0; j < this.itemNum; j++) {
                 let node = cc.instantiate(this.pre_item);
@@ -86,12 +86,16 @@ export default class game extends cc.Component {
                 // 设置位置
 
                 var posX = pos.x + this.itemWH / 2 + this.jiange + i * (this.itemWH + this.jiange);
-                var posY = pos.y + this.itemWH / 2 + this.jiange + j * (this.itemWH + this.jiange);
+                var posY = pos.y - this.itemWH / 2 - this.jiange - j * (this.itemWH + this.jiange);
+                // var posY = pos.y + this.itemWH / 2 + this.jiange - j * (this.itemWH + this.jiange);
                 var posEnd = cc.v2(posX, posY);
 
                 var js = node.getComponent(item);
                 if (js) {
-                    js.init(i + j * this.itemNum, 70 - 5 * (this.itemNum - 3));
+                    js.init(i + j * this.itemNum + 1, 70 - 5 * (this.itemNum - 3));
+                    let isEnd = (i === this.itemNum - 1) && (j === this.itemNum - 1);
+                    
+                    js.senEnd(isEnd);
                 }
                 node.setPosition(posEnd);
             }
