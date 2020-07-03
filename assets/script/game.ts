@@ -23,7 +23,7 @@ export default class game extends cc.Component {
     pre_item: cc.Prefab = null;
 
     // 横竖有多少个
-    itemNum: number = 1;
+    itemNum: number = 3;
     // 每个item的宽高
     itemWH: number = 1;
     // 两个块 之间的间隔
@@ -115,6 +115,7 @@ export default class game extends cc.Component {
             console.log("点击了返回按钮");
             this.nodeReady.active = true;
             this.nodePinTu.active = false;
+            this.bgPinTu.removeAllChildren();
         }
     }
 
