@@ -37,9 +37,7 @@ export default class game extends cc.Component {
         this.nodePinTu.active = false;
     }
 
-    initPinTu() {
-
-        this.itemNum = 4;
+    initHRD() {
         this.itemWH = Math.round(this.BG_SIZE / this.itemNum);
         this.bgPinTuWH = this.itemWH * this.itemNum + this.jiange * (this.itemNum + 1);
 
@@ -94,7 +92,7 @@ export default class game extends cc.Component {
                 if (js) {
                     js.init(i + j * this.itemNum + 1, 70 - 5 * (this.itemNum - 3));
                     let isEnd = (i === this.itemNum - 1) && (j === this.itemNum - 1);
-                    
+
                     js.senEnd(isEnd);
                 }
                 node.setPosition(posEnd);
@@ -107,11 +105,21 @@ export default class game extends cc.Component {
             console.log("点击了拼图按钮");
             this.nodeReady.active = false;
             this.nodePinTu.active = true;
-            this.initPinTu();
+
+        } if (str == "huarongdao") {
+            console.log("点击了华容道按钮");
+            this.nodeReady.active = false;
+            this.nodePinTu.active = true;
+            this.initHRD();
         } else if (str === "fanhui") {
             console.log("点击了返回按钮");
             this.nodeReady.active = true;
             this.nodePinTu.active = false;
         }
+    }
+
+    clickToggle(event, str: string) {
+        console.log("click Toggle: " + str);
+        this.itemNum = parseInt(str);
     }
 }
