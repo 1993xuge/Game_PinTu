@@ -5,6 +5,8 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class game extends cc.Component {
 
+    public static Instance: game = null;
+
     private BG_SIZE: number = 650;
 
     @property(cc.Node)
@@ -30,9 +32,17 @@ export default class game extends cc.Component {
     jiange: number = 5;
     // 拼图背景的宽高
     bgPinTuWH: number = 1;
+    itemJL: number = 0;
 
+    onLoad() {
 
-    start() {
+        if (game.Instance === null) {
+            game.Instance = this;
+        } else {
+            this.destroy();
+            return;
+        }
+
         this.nodeReady.active = true;
         this.nodePinTu.active = false;
     }
@@ -40,6 +50,7 @@ export default class game extends cc.Component {
     initHRD() {
         this.itemWH = Math.round(this.BG_SIZE / this.itemNum);
         this.bgPinTuWH = this.itemWH * this.itemNum + this.jiange * (this.itemNum + 1);
+        this.itemJL = this.itemWH + this.jiange;
 
         this.bgPinTu.width = this.bgPinTuWH;
         this.bgPinTu.height = this.bgPinTuWH;
@@ -100,6 +111,41 @@ export default class game extends cc.Component {
         }
     }
 
+    cleanAllItem() {
+        this.bgPinTu.removeAllChildren();
+    }
+
+    pdMove(node: cc.Node) {
+        // console.log("pdMove --> x = " + pos.x + "   y = " + pos.y);
+        var nodeENd: cc.Node = null;
+
+        var children = this.bgPinTu.children;
+        for (let i = 0; i < children.length; i++) {
+            const js = children[i].getComponent(item);
+            if (js && js.isEnd) {
+                nodeENd = children[i];
+                break;
+            }
+        }
+
+        if (nodeENd != null) {
+            let distance = cc.Vec2.distance(node.getPosition(), nodeENd.getPosition());
+            console.log("distance = " + distance + "   itemJL = " + this.itemJL);
+            if (distance - this.itemWH < 10) {
+                console.log("是相邻的块，可以移动");
+                this.dealMove(node, nodeENd);
+            }
+        }
+
+    }
+
+    dealMove(node1: cc.Node, node2: cc.Node) {
+        var pos1 = node1.getPosition();
+        var pos2 = node2.getPosition();
+        node1.setPosition(pos2);
+        node2.setPosition(pos1);
+    }
+
     clickButton(e, str) {
         if (str == "pintu") {
             console.log("点击了拼图按钮");
@@ -115,7 +161,7 @@ export default class game extends cc.Component {
             console.log("点击了返回按钮");
             this.nodeReady.active = true;
             this.nodePinTu.active = false;
-            this.bgPinTu.removeAllChildren();
+            this.cleanAllItem();
         }
     }
 
@@ -123,4 +169,6 @@ export default class game extends cc.Component {
         console.log("click Toggle: " + str);
         this.itemNum = parseInt(str);
     }
+
+
 }
